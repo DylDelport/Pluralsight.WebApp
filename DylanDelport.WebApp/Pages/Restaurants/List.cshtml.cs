@@ -15,8 +15,14 @@ namespace DylanDelport.WebApp.Pages.Restaurants
         private readonly IConfiguration config;
         private readonly IRestaurantData restaurantData;
 
+        #region Properties
         public string Message { get; set; }
+
         public IEnumerable<Restaurant> Restaurants{ get; set; }
+
+        [BindProperty(SupportsGet = true)]
+        public string SearchTerm { get; set; }
+        #endregion
 
         public ListModel(IConfiguration config, IRestaurantData restaurantData)
         {
@@ -26,8 +32,11 @@ namespace DylanDelport.WebApp.Pages.Restaurants
 
         public void OnGet()
         {
+            //Old school version
+            var querystring = HttpContext.Request.QueryString;
+
             Message = config["Message"];
-            Restaurants = restaurantData.GetAll();
+            Restaurants = restaurantData.GetRestaurantsByName(SearchTerm);
         }
     }
 }

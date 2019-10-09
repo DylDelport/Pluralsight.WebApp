@@ -8,10 +8,9 @@ namespace DylanDelport.Data
 {
     public interface IRestaurantData
     {
-        IEnumerable<Restaurant> GetAll();
-
+        IEnumerable<Restaurant> GetRestaurantsByName(string name);
+        Restaurant GetById(int id);
     }
-
     public class InMemoryRestaurantData : IRestaurantData
     {
         readonly List<Restaurant> restaurants;
@@ -31,7 +30,7 @@ namespace DylanDelport.Data
                 // Dummy Data 2
                 new Restaurant {
                                 Id = 2,
-                                Name = "Cinnamon CLub",
+                                Name = "Cinnamon Club",
                                 Location = "London",
                                 Cuisine = CuisineType.Mexican
                 },
@@ -46,9 +45,15 @@ namespace DylanDelport.Data
             };
         }
 
-        public IEnumerable<Restaurant> GetAll()
+        public IEnumerable<Restaurant> GetRestaurantsByName(string name = null)
         {
-            return restaurants.OrderBy(x => x.Name);
+            var _name = string.IsNullOrEmpty(name) ? "" : name.ToLower();
+            return restaurants.Where(y => y.Name.ToLower().StartsWith(_name)).OrderBy(x => x.Name);
+        }
+
+        public Restaurant GetById(int id)
+        {
+            return restaurants.SingleOrDefault(x => x.Id == id);
         }
     }
 }
